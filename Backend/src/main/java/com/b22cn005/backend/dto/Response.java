@@ -1,9 +1,7 @@
-package com.b22cn005.loggingmiddleware.dtos;
+package com.b22cn005.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

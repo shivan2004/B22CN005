@@ -6,6 +6,7 @@ import com.b22cn005.backend.dto.RedirectResponse;
 import com.b22cn005.backend.dto.StatisticsResponse;
 import com.b22cn005.backend.entities.Url;
 import com.b22cn005.backend.entities.UrlHits;
+import com.b22cn005.backend.exceptions.OriginalUrlBlankException;
 import com.b22cn005.backend.repositories.UrlHitsRepository;
 import com.b22cn005.backend.repositories.UrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class UrlService {
 
     public CreateShortcutResponse createShortUrl(String originalUrl, String shortUrl, String validity) {
         if(originalUrl == null) {
-            throw new IllegalArgumentException("Arguments are not provided");
+            throw new OriginalUrlBlankException("Arguments are not provided");
         }
 
         if(urlRepository.existsByShortUrl(shortUrl)) {
