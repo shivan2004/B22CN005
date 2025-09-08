@@ -7,6 +7,9 @@ import com.b22cn005.backend.dto.StatisticsResponse;
 import com.b22cn005.backend.entities.Url;
 import com.b22cn005.backend.entities.UrlHits;
 import com.b22cn005.backend.exceptions.OriginalUrlBlankException;
+import com.b22cn005.backend.exceptions.ShortLinkAlreadyExistsException;
+import com.b22cn005.backend.exceptions.ShortLinkIsNotSupportedException;
+import com.b22cn005.backend.exceptions.ShortLinkNotFoundException;
 import com.b22cn005.backend.repositories.UrlHitsRepository;
 import com.b22cn005.backend.repositories.UrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +57,7 @@ public class UrlService {
         }
 
         if(urlRepository.existsByShortUrl(shortUrl)) {
-            throw new IllegalArgumentException("ShortUrl Already Exists");
+            throw new ShortLinkAlreadyExistsException("ShortUrl Already Exists");
         }
 
         if(shortUrl == null) {
@@ -63,7 +66,7 @@ public class UrlService {
 
         if(!shortUrl.matches(REGEX)) {
             System.out.println(shortUrl);
-            throw new IllegalArgumentException("ShortUrl is not in right format");
+            throw new ShortLinkIsNotSupportedException("ShortUrl is not in right format");
         }
 
 
@@ -91,7 +94,7 @@ public class UrlService {
 
     @Transactional
     public RedirectResponse redirect(String shortUrl) {
-        Url url = urlRepository.findByShortUrl(shortUrl).orElseThrow(() -> new RuntimeException(""));
+        Url url = urlRepository.findByShortUrl(shortUrl).orElseThrow(() -> new ShortLinkNotFoundException("No url exists with provided short urls"));
 
 
 
@@ -108,7 +111,7 @@ public class UrlService {
 
     public StatisticsResponse statistics(String shortLink) {
         Url url = urlRepository.findByShortUrl(shortLink)
-                .orElseThrow(() -> new RuntimeException("No url exists with provided short urls"));
+                .orElseThrow(() -> new ShortLinkNotFoundException("No url exists with provided short urls"));
 
         return modelMapper.map(url, StatisticsResponse.class);
     }
